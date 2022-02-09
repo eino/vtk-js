@@ -143,9 +143,11 @@ function vtkMapper(publicAPI, model) {
     if (model.colorBuildString === toString) return;
 
     if (!model.useLookupTableScalarRange) {
-      publicAPI
-        .getLookupTable()
-        .setRange(model.scalarRange[0], model.scalarRange[1]);
+      var scalarRange = model.scalarRange;
+      if (scalarRange == null) {
+        scalarRange = scalars.getRange(model.fieldDataTupleId);
+      }
+      publicAPI.getLookupTable().setRange(scalarRange[0], scalarRange[1]);
     }
 
     // Decide between texture color or vertex color.
@@ -506,7 +508,7 @@ const DEFAULT_VALUES = {
   lookupTable: null,
 
   scalarVisibility: true,
-  scalarRange: [0, 1],
+  scalarRange: null,
   useLookupTableScalarRange: false,
 
   colorMode: 0,
